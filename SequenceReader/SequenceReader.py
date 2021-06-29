@@ -2,14 +2,29 @@ import fileinput
 import sys
 from DictionaryHelper import DictionaryHelper
 
-def main(file=None):
+#command line args: python ./SequenceReader.py long.txt short.txt medium.txt
+#Piping in files: type long.txt | python ./SequenceReader.py
+#type is windows version of cat from linux
+
+def main(files=None):
 
     sequence_dict = {}
     unfinished_sequence = []
     sequence_of_second_last_line = ''
     sequence_of_last_line = ''
+    f = ''
 
-    for line in fileinput.input(files=("short.txt","long.txt")):
+    if files: #No args and file descriptor is open means it is a test so run test file
+        f = fileinput.input(files=(files))
+    elif len(sys.argv) > 1 or not sys.stdin.isatty(): #There are commands from the command line so lets run them
+        f= fileinput.input()
+    else: #No command line args and no file so throw error
+        print("ERROR: Command line arguments are required\n")
+        print("Example Command: python ./SequenceReader.py long.txt short.txt medium.txt")
+        print("Example Command: type long.txt | python ./SequenceReader.py")
+        quit();
+
+    for line in f:
         if line == '\n':
             continue
         text = line.lower()
@@ -56,7 +71,7 @@ def main(file=None):
         top_hundred +=1
         print(f'{top_hundred} {item[0]} - {item[1]}')
 
-    if file:
+    if files:
         return sorted_dict
 
 if __name__ == "__main__":

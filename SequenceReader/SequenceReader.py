@@ -9,24 +9,26 @@ def main(file=None):
     sequence_of_second_last_line = ''
     sequence_of_last_line = ''
 
-    for line in fileinput.input():
+    for line in fileinput.input(files=("short.txt","long.txt")):
         if line == '\n':
             continue
         text = line.lower()
         words = text.split()
         words = [word.strip('.,:;"+=@#$%^&*\|!?()[]<>{}-') for word in words]
+
+        space_remover = 0
+
+        while space_remover != words.count(''):
+            words.remove('')
+
         sequence = ''         
 
         if sequence_of_last_line:
-            print(sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0])
-
             if len(words) < 2: #1 word on the line
                 sequence = sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0]
                 sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
                 sequence_of_last_line = [(sequence_of_last_line[2]), (sequence_of_last_line[2]), (words[0])] #fill the sequence back up to work for the next line
                 continue
-
-            print(sequence_of_last_line[2] + ' ' + words[0] + ' ' + words[1])
 
             #TODO sometimes the new line and the last line won't have 3 characters on it so you have to go to the next one
             sequences = [sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0],

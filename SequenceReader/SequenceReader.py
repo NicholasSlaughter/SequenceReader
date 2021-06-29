@@ -1,41 +1,50 @@
 import fileinput
 import sys
+from DictionaryHelper import DictionaryHelper
 
 def main(file=None):
 
     sequence_dict = {}
     unfinished_sequence = []
-    last_sequence_of_line = ''
+    sequence_of_second_last_line = ''
+    sequence_of_last_line = ''
 
     for line in fileinput.input():
         if line == '\n':
             continue
         text = line.lower()
         words = text.split()
-        words = [word.strip('.,:;"+=@#$%^&*\|!?()[]<>{}') for word in words]
+        words = [word.strip('.,:;"+=@#$%^&*\|!?()[]<>{}-') for word in words]
+        sequence = ''         
 
-        if last_sequence_of_line:
-            print(last_sequence_of_line[1] + ' ' + last_sequence_of_line[2] + ' ' + words[0])
-            print(last_sequence_of_line[2] + ' ' + words[0] + ' ' + words[1])
+        if sequence_of_last_line:
+            print(sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0])
+
+            if len(words) < 2: #1 word on the line
+                sequence = sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0]
+                sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
+                sequence_of_last_line = [(sequence_of_last_line[2]), (sequence_of_last_line[2]), (words[0])] #fill the sequence back up to work for the next line
+                continue
+
+            print(sequence_of_last_line[2] + ' ' + words[0] + ' ' + words[1])
 
             #TODO sometimes the new line and the last line won't have 3 characters on it so you have to go to the next one
-            sequences = [last_sequence_of_line[1] + ' ' + last_sequence_of_line[2] + ' ' + words[0],
-                        last_sequence_of_line[2] + ' ' + words[0] + ' ' + words[1]]
-            for seq in sequences:
-                if seq not in sequence_dict:
-                    sequence_dict[seq]=0
-                sequence_dict[seq]+=1
+            sequences = [sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0],
+                        sequence_of_last_line[2] + ' ' + words[0] + ' ' + words[1]]
+            for sequence in sequences:
+                sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
+        if len(words) == 2:
+            sequence_of_last_line = [(sequence_of_last_line[2]), (words[0]), (words[1])] #fill the sequence back up to work for the next line
+            continue
 
         i=0
         sequence = ''
         while i+2 < len(words):
-            sequence = words[i] + ' ' + words[i+1] + ' ' + words[i+2]
-            if sequence not in sequence_dict:
-                sequence_dict[sequence]=0
-            sequence_dict[sequence]+=1
+            sequence = words[i] + ' ' + words[i+1] + ' ' + words[i+2]            
+            sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
             i+=1
 
-        last_sequence_of_line = sequence.split()
+        sequence_of_last_line = sequence.split()
 
     sorted_dict = sorted(sequence_dict.items(),key=lambda x:x[1], reverse=True)
     top_hundred = 0

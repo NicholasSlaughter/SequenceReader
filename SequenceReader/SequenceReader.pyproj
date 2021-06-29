@@ -24,6 +24,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DictionaryHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SequenceReader.py" />
     <Compile Include="SequenceReaderTests.py">
       <SubType>Code</SubType>

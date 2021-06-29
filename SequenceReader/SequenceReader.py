@@ -1,4 +1,5 @@
 import fileinput
+import sys
 
 def main(file=None):
 
@@ -6,7 +7,7 @@ def main(file=None):
     unfinished_sequence = []
     last_sequence_of_line = ''
 
-    for line in fileinput.input(files=('short.txt')):
+    for line in fileinput.input():
         if line == '\n':
             continue
         text = line.lower()
@@ -14,6 +15,10 @@ def main(file=None):
         words = [word.strip('.,:;"+=@#$%^&*\|!?()[]<>{}') for word in words]
 
         if last_sequence_of_line:
+            print(last_sequence_of_line[1] + ' ' + last_sequence_of_line[2] + ' ' + words[0])
+            print(last_sequence_of_line[2] + ' ' + words[0] + ' ' + words[1])
+
+            #TODO sometimes the new line and the last line won't have 3 characters on it so you have to go to the next one
             sequences = [last_sequence_of_line[1] + ' ' + last_sequence_of_line[2] + ' ' + words[0],
                         last_sequence_of_line[2] + ' ' + words[0] + ' ' + words[1]]
             for seq in sequences:

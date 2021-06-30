@@ -1,7 +1,7 @@
 from Helper import Helper
 from FileSearch import FileSearch
 
-#Name: Nicholas Slaughter
+#Author: Nicholas Slaughter
 #Date Created: 6/28/2021
 #Date Last Modified: 6/30/2021
 #Purpose: Coding Challenge For New Relic

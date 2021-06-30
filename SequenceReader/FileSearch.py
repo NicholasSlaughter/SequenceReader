@@ -18,6 +18,8 @@ class FileSearch(object):
             if line == '\n':
                 continue
 
+            t = type(line)
+
             words = Helper.Fluff_Remover(line) #Remove punctuation, white spaces, and make all words lower case
 
             #If the last line had a sequence then we want to snake that sequence down to the next line
@@ -45,18 +47,27 @@ class FileSearch(object):
             
             #If there is only 2 words on the current line then we have already added the needed sequences to the dictionary so we continue to the next line
             if len(words) == 2:
-                new_line_sequence = [(new_line_sequence[2]), (words[0]), (words[1])] #update the new line sequence to work for the next line
+                if file_stream.isfirstline():
+                    new_line_sequence = [(words[0]), (words[1])]
+                else:
+                    new_line_sequence = [(new_line_sequence[2]), (words[0]), (words[1])] #update the new line sequence to work for the next line
                 continue
 
             #Go through the line and add each sequence of 3 words to the dictionary
             #If the sequence is already in the dictionary its value will be updated if it is a new sequence it will be added
             i=0
+            sequence=''
             while i+2 < len(words): #Loop through the words in the line (We access i+2 inside the loop so must check if we aren't over the length)
                 sequence = words[i] + ' ' + words[i+1] + ' ' + words[i+2] #Add the next 3 words to a sequence            
                 sequence_dict[sequence] = Helper.Add_To_Dictionary(sequence,sequence_dict) #Check to see if the sequence is new and update its value
                 i+=1 #increment the iterator for the next phase of the loop
 
             new_line_sequence = sequence.split() #split the last sequence into a list to be used for snaking the sequences into the next line
+
+        #If the dictionary is empty then the file did not contain at least 3 words
+        if not sequence_dict:
+            print("ERROR: Text File Must Include At Least 3 Words")
+            return 0
 
         return Helper.Output_Sorted_Dictionary(sequence_dict) #Sort the dictionary and return to main
 

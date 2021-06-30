@@ -203,5 +203,15 @@ class Test_SequenceReaderTests(unittest.TestCase):
             except:
                 self.fail("dictionary returned does not match the expected")
 
+    def test_ReadBadText_WithValidBadText_ReturnsStopApplication(self):
+            try:
+                f= 'bad.txt'
+
+                result = main(f)
+
+                self.assertTrue(result==0)
+            except:
+                self.fail("dictionary returned does not match the expected")
+
 if __name__ == '__main__':
     unittest.main()

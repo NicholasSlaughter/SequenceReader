@@ -1,5 +1,3 @@
-import fileinput
-import sys
 from Helper import Helper
 from FileSearch import FileSearch
 

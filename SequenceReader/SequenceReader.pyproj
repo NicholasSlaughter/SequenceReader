@@ -24,7 +24,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DictionaryHelper.py">
+    <Compile Include="Helper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileSearch.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SequenceReader.py" />

@@ -3,7 +3,7 @@ from FileSearch import FileSearch
 
 #Name: Nicholas Slaughter
 #Date Created: 6/28/2021
-#Date Last Modified: 6/29/2021
+#Date Last Modified: 6/30/2021
 #Purpose: Coding Challenge For New Relic
 #Description: This program reads through a text file or files and parses through them looking for every sequence of 3 words.
 #The program checks to see how frequent each time a similar sequence of 3 words comes up and then sorts them into a list from
@@ -14,7 +14,8 @@ from FileSearch import FileSearch
 #Examples of running the program from the command line:
 #command line args: python ./SequenceReader.py long.txt short.txt medium.txt
 #Piping in files: type long.txt | python ./SequenceReader.py
-#type is windows version of cat from linux
+#Note: type long.txt | python ./SequenceReader.py short.txt will only run the short.txt
+#Note: type is windows version of cat from linux
 
 def main(files=None):
     #Parses the filestream for the frequency that sequences of 3 words appear

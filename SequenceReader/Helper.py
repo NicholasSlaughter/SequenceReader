@@ -1,4 +1,5 @@
 import sys
+import os
 import fileinput
 
 class Helper(object):
@@ -15,19 +16,15 @@ class Helper(object):
     #Checks to see which stream of files is needed for a given instance
     #If we are testing then we run the test files otherwise we run the files specified from the command line
     def Input_Check(files):
-        f_stream=''
-
-        if files: #if test files are passed then run the test files
-            f_stream = fileinput.input(files=(files))
+        if files: #if test files are passed then run the test files (Used fileinput.FileInput(files) because if all tests were ran at once some would fail and say that input() was already in use)
+            return fileinput.FileInput(files)
         elif len(sys.argv) > 1 or not sys.stdin.isatty(): #There are commands from the command line so lets run them
-            f_stream= fileinput.input() #If fileinput.input() then we are waiting for a command arg
+            return fileinput.input() #If fileinput.input() then we are read the command args
         else: #No command line args and no file so prompt an error and quit
             print("ERROR: Command line arguments are required\n")
             print("Example Command: python ./SequenceReader.py long.txt short.txt medium.txt")
             print("Example Command: type long.txt | python ./SequenceReader.py")
             quit();
-
-        return f_stream #Return the file stream for it to be parsed through
 
     #Outputs the top 100 sequences in the dictionary to the screen from highest to lowest value
     def Output_Sorted_Dictionary(dict):
@@ -55,3 +52,12 @@ class Helper(object):
             words.remove('') #removes the next white space in the words list
         
         return words #Return the words with no fluff in them to be parsed through for sequences
+
+    #Checks to see if the file given is a text file
+    #Could not put file_name == '<stdin>' check in here because the error 'The process tried to write to a nonexistent pipe' would appear
+    def File_Extension_Check(file_name):
+        extension = os.path.splitext(file_name)[1] #Gets the file extension from the file
+        if extension != ".txt": #If the file is not a text file output error and what file caused it
+            print("ERROR: All files must be text files!")
+            print(f"File Error: {file_name}")
+            return True

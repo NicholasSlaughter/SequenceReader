@@ -33,7 +33,9 @@ class Test_SequenceReaderTests(unittest.TestCase):
             expected_weird_line_dict = [("i am nick", 1), ("am nick i'm", 1), ("nick i'm cool", 1), ("i'm cool yes", 1),
                                   ("cool yes super", 1), ("yes super cool", 1), ("super cool because", 1), ("cool because i'm", 1), ("because i'm nick", 1)]
             f= 'weirdlines.txt'
+
             result = main(f)
+
             self.assertTrue(result==expected_weird_line_dict)
         except:
             self.fail("dictionary returned does not match the expected")
@@ -144,6 +146,46 @@ class Test_SequenceReaderTests(unittest.TestCase):
         except:
             self.fail("dictionary returned does not match the expected")
 
+    def test_ReadAllTextFile_WithValidTextFile_ReturnsDictionaryThatHasNoPunctuation(self):
+        try:
+            f= ['long.txt', 'short.txt',
+                'medium.txt', 'weirdlines.txt']
+            punctuation = {'.',',', ':', ';', '"', '+', '=', '@', '#', '$', '%', '^', '&',
+                           '*', '\\', '|', '!', '?', '(', ')', '[', ']', '<', '>', '{', '}', '-'}
+            check = True
+
+            result = main(f)
+
+            #Go Through the dictionary and make sure every sequence does not contain punctuation
+            for item in result:
+                word_list = item[0].split() #Split the words into a list
+                if punctuation in word_list: #See if punctuation is in the sequence
+                    check = False
+                    break
+
+            self.assertTrue(check)
+        except:
+            self.fail("dictionary returned does not match the expected")
+
+    def test_ReadAllTextFile_WithValidTextFile_ReturnsDictionaryThatHasOnlySequencesOfThreeWords(self):
+        try:
+            f= ['long.txt', 'short.txt',
+                'medium.txt', 'weirdlines.txt']
+            check = True
+
+            result = main(f)
+
+            #Go Through the dictionary and make sure every sequence contains 3 words
+            for item in result:
+                word_list = item[0].split() #Split the words into a list
+                if len(word_list) != 3: #Check to see if that list contains 3 words
+                    check = False
+                    break
+
+            self.assertTrue(check)
+        except:
+            self.fail("dictionary returned does not match the expected")
+
     def test_ReadAllTexts_WithWrongTexts_ReturnsUnExpectedDictionary(self):
         try:
             expected_all_texts_dict = [("there was a", 65), ("out of the", 46), ("he did not", 41), ("he could not", 41), ("of the mountain", 40),
@@ -155,6 +197,8 @@ class Test_SequenceReaderTests(unittest.TestCase):
             check = True
 
             result = main(f)
+
+            #See if all of the expected items in the list are in the results
             while i < 19:
                 if result.count(expected_all_texts_dict[i]) < 1:
                     check = False
@@ -174,6 +218,8 @@ class Test_SequenceReaderTests(unittest.TestCase):
                 check = True
 
                 result = main(f)
+
+                #See if all of the expected items in the list are in the results
                 while i < 5:
                     if result.count(expected_all_texts_dict[i]) < 1:
                         check = False
@@ -202,6 +248,36 @@ class Test_SequenceReaderTests(unittest.TestCase):
                 self.assertFalse(check)
             except:
                 self.fail("dictionary returned does not match the expected")
+
+    def test_ReadBadText_WithValidBadText_ReturnsStopApplication(self):
+            try:
+                f= 'bad.txt'
+
+                result = main(f)
+
+                self.assertTrue(result==0)
+            except:
+                self.fail("dictionary returned does not match the expected")
+
+    def test_ReadNonTextFile_WithFileThatIsNotTextFile_ReturnsStopApplication(self):
+        try:
+            f='Helper.py'
+
+            result = main(f)
+
+            self.assertTrue(result==0)
+        except:
+            self.fail("Program Tried To Read A Non Text File")
+
+    def test_ReadNonTextFileAfterReadingTextFile_WithFilesThatAreTextAndAreNotText_ReturnsStopApplication(self):
+        try:
+            f= ['short.txt', 'Helper.py']
+
+            result = main(f)
+
+            self.assertTrue(result==0)
+        except:
+            self.fail("Program Tried To Read A Non Text File")
 
 if __name__ == '__main__':
     unittest.main()

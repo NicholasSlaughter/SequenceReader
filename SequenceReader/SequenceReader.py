@@ -63,6 +63,7 @@ def main(files=None):
 
         sequence_of_last_line = sequence.split()
 
+    temp = sequence_dict.get("i am nick")
     sorted_dict = sorted(sequence_dict.items(),key=lambda x:x[1], reverse=True)
     top_hundred = 0
     for item in sorted_dict:

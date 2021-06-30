@@ -279,5 +279,15 @@ class Test_SequenceReaderTests(unittest.TestCase):
         except:
             self.fail("Program Tried To Read A Non Text File")
 
+    def test_DoNotReadFile_WithFileThatDoesNotExist_ReturnsStopApplication(self):
+        try:
+            f='Helper.txt'
+
+            result = main(f)
+
+            self.assertTrue(result==0)
+        except:
+            self.fail("Program Tried To Read A Non Text File")
+
 if __name__ == '__main__':
     unittest.main()

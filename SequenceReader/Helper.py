@@ -11,7 +11,7 @@ class Helper(object):
             seq_dict[seq]=0
         seq_dict[seq]+=1 #increment the value of the sequence by 1 
         return seq_dict[seq] #return the dictionary
-    
+
     #Checks to see which stream of files is needed for a given instance
     #If we are testing then we run the test files otherwise we run the files specified from the command line
     def Input_Check(files):

@@ -1,77 +1,29 @@
 import fileinput
 import sys
-from DictionaryHelper import DictionaryHelper
+from Helper import Helper
+from FileSearch import FileSearch
 
+#Name: Nicholas Slaughter
+#Date Created: 6/28/2021
+#Date Last Modified: 6/29/2021
+#Purpose: Coding Challenge For New Relic
+#Description: This program reads through a text file or files and parses through them looking for every sequence of 3 words.
+#The program checks to see how frequent each time a similar sequence of 3 words comes up and then sorts them into a list from
+#most frequent to least frequent. Either the total amount of sequences in the text file will be outputed in descending order or
+#the top 100 sequences will be outputed to the screen (whichever is smaller).
+#
+#The program takes in input from the command line either through arguments or piping a file in.
+#Examples of running the program from the command line:
 #command line args: python ./SequenceReader.py long.txt short.txt medium.txt
 #Piping in files: type long.txt | python ./SequenceReader.py
 #type is windows version of cat from linux
 
 def main(files=None):
+    #Parses the filestream for the frequency that sequences of 3 words appear
+    #Those sequences are then put that into a dictionary which is then sorted by most frequent to least frequent sequence
+    sorted_dict = FileSearch.Parse_File(files) #Returns a sorted dictionary of most frequent to least frequent sequence
 
-    sequence_dict = {}
-    unfinished_sequence = []
-    sequence_of_second_last_line = ''
-    sequence_of_last_line = ''
-    f = ''
-
-    if files: #No args and file descriptor is open means it is a test so run test file
-        f = fileinput.input(files=(files))
-    elif len(sys.argv) > 1 or not sys.stdin.isatty(): #There are commands from the command line so lets run them
-        f= fileinput.input()
-    else: #No command line args and no file so throw error
-        print("ERROR: Command line arguments are required\n")
-        print("Example Command: python ./SequenceReader.py long.txt short.txt medium.txt")
-        print("Example Command: type long.txt | python ./SequenceReader.py")
-        quit();
-
-    for line in f:
-        if line == '\n':
-            continue
-        text = line.lower()
-        words = text.split()
-        words = [word.strip('.,:;"+=@#$%^&*\|!?()[]<>{}-') for word in words]
-
-        space_remover = 0
-
-        while space_remover != words.count(''):
-            words.remove('')
-
-        sequence = ''         
-
-        if sequence_of_last_line:
-            if len(words) < 2: #1 word on the line
-                sequence = sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0]
-                sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
-                sequence_of_last_line = [(sequence_of_last_line[2]), (sequence_of_last_line[2]), (words[0])] #fill the sequence back up to work for the next line
-                continue
-
-            #TODO sometimes the new line and the last line won't have 3 characters on it so you have to go to the next one
-            sequences = [sequence_of_last_line[1] + ' ' + sequence_of_last_line[2] + ' ' + words[0],
-                        sequence_of_last_line[2] + ' ' + words[0] + ' ' + words[1]]
-            for sequence in sequences:
-                sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
-        if len(words) == 2:
-            sequence_of_last_line = [(sequence_of_last_line[2]), (words[0]), (words[1])] #fill the sequence back up to work for the next line
-            continue
-
-        i=0
-        sequence = ''
-        while i+2 < len(words):
-            sequence = words[i] + ' ' + words[i+1] + ' ' + words[i+2]            
-            sequence_dict[sequence] = DictionaryHelper.Add_To_Dictionary(sequence,sequence_dict)
-            i+=1
-
-        sequence_of_last_line = sequence.split()
-
-    temp = sequence_dict.get("i am nick")
-    sorted_dict = sorted(sequence_dict.items(),key=lambda x:x[1], reverse=True)
-    top_hundred = 0
-    for item in sorted_dict:
-        if top_hundred == 100:
-            break;
-        top_hundred +=1
-        print(f'{top_hundred} {item[0]} - {item[1]}')
-
+    #If test files were used return the sorted dictionary to see if its test passes
     if files:
         return sorted_dict
 
